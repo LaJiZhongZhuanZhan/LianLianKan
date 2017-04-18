@@ -1,1 +1,3 @@
 # LianLianKan
+
+$appletviewer play.html
