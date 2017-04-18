@@ -5,17 +5,16 @@ import javax.swing.JOptionPane;
 
 public class llk extends Applet {
 	
-	//////////////可根据游戏需求更改////////////////
+	//////////////////////////////
 	//int mapWidth = 10;
 	//int mapHeight = 8;
-	int mapWidth = 14;	//游戏总共的行列数目，乘积必须为偶数
+	int mapWidth = 14;
 	int mapHeight = 10;
-	//int width =72,height=72;
-	int width =45,height=45;	//图片宽度和高度
-	//int KindsOfPic = 9;
-	int KindsOfPic = 22;	//图片种类
-	
-	//////////////不可更改////////////////
+	//int width =72,height=72;	//图片宽度和高度
+	int width =45,height=45;
+	//int KindsOfPic = 9;		//图片种类
+	int KindsOfPic = 22;
+	//////////////////////////////
 	int PicWidth = mapWidth - 2;	//图片坐标范围
 	int PicHeight = mapHeight - 2;
 	int SumPic = PicWidth * PicHeight;	//剩余图片总数
@@ -25,11 +24,14 @@ public class llk extends Applet {
 	Image[] img = new Image[ KindsOfPic + 8 ];
 	int[][] map = new int[mapHeight][mapWidth];	//0:null
 	
+	Image imgOff;	//缓冲图像
+	Graphics grpOff;	//缓冲屏
+	
 	Image kong;
 	Stack stack = new Stack();	//路径栈
 	
 	public void init() {
-		this.setBackground(Color.black);	//可以修改游戏的背景色
+		this.setBackground(Color.black);
 		
 		//pic
 		for( int i = 1; i <= KindsOfPic; ++i ) {
@@ -82,12 +84,19 @@ public class llk extends Applet {
 	}
 	
 	public void paint(Graphics g) {		//绘制屏幕
+		imgOff = createImage(this.size().width,this.size().height);
+		grpOff = imgOff.getGraphics();
 		for( int i = 0; i < mapHeight; ++i)
 			for( int j = 0; j < mapWidth; ++j)
 				if(map[i][j] != 0)
-					g.drawImage( img[map[i][j]],j*width,i*height,this);
+					grpOff.drawImage( img[map[i][j]],j*width,i*height,this);
+		g.drawImage(imgOff,0,0,this);
 	}
 	
+	public void update(Graphics g)
+	{
+		paint(g);
+	}
 ////////////////////////////////////////////////////////////////////////
 ////////////////////////////Press Picture///////////////////////////////
 ////////////////////////////////////////////////////////////////////////
@@ -176,7 +185,6 @@ public class llk extends Applet {
 			for(int j = 1; j <= PicWidth; ++j)
 				if(map[i][j]!=0)
 					vecMap.addElement( new MyPair(i,j,map[i][j]) );
-
 		while( vecMap.size() > 1)
 		{
 			
